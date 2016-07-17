@@ -11,10 +11,10 @@ using namespace std;
 struct node
 {
 	int maxi, lmaxi, rmaxi, sum;
-}tree[65521],outtree;                 //tree's szie should be large50000009
+}tree[90000000], outtree;                 //tree's szie should be large50000009
 
 int g_data_num = 0;
-const int g_data_line = 20000;
+const int g_data_line = 10000000;
 int data[g_data_line + 1];
 
 fstream file;
@@ -103,10 +103,12 @@ struct node QueryInMemory(int l, int r, int aa, int bb, int rt)
 	return res;
 }
 
+int ionum = 0;
 struct node QueryInDisk(int l, int r, int aa, int bb, int rt)
 {
 	if (aa <= l && bb >= r)
     {
+		ionum++;
         file.seekg(sizeof(node)*(rt), ios::beg);
         file.read((char*)&outtree, sizeof(node));
         return outtree;
@@ -158,22 +160,23 @@ int main()
 	int left, right;
 	int a = 1;                                             
 	int b = g_data_line;
-	GetData("data2w.txt", a, b);
-	printf("total data sum is %d\n", g_data_num);
+	//GetData("1000w.txt", a, b);
+	//printf("total data sum is %d\n", g_data_num);
 	
-	CreateTree(a, b, 1, data);//build a to b segmenttree
-    WriteIndexFile();
-	cout << "node number is " << nodenum << endl;
+	//CreateTree(a, b, 1, data);//build a to b segmenttree
+    //WriteIndexFile();
+	//cout << "node number is " << nodenum << endl;
     file.open("index.dat", ios::in | ios::binary);
 
 	while (1)
 	{
 		printf("Please input range: \n");
 		cin >> left >> right;
-        		struct node res1 = QueryInMemory(a, b, left, right, 1);        // query aa to bb 's maxsub
-		cout << "maxsub sum is " << res1.maxi << " in memory" << endl;
+        //struct node res1 = QueryInMemory(a, b, left, right, 1);        // query aa to bb 's maxsub
+		//cout << "maxsub sum is " << res1.maxi << " in memory" << endl;
 		struct node res2 = QueryInDisk(a, b, left, right, 1);        // query aa to bb 's maxsub
 		cout << "maxsub sum is " << res2.maxi << " in disk" << endl;
+		cout << "I/O number is " << ionum << endl;
 	}
 	return 0;
 }

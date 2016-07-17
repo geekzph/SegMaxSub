@@ -11,12 +11,13 @@ using namespace std;
 struct node
 {
 	int maxi, lmaxi, rmaxi, sum;
-}tree[40000];                 //tree's szie should be large50000009
+}tree[65521],outtree;                 //tree's szie should be large50000009
 
 int g_data_num = 0;
 const int g_data_line = 20000;
 int data[g_data_line + 1];
 
+fstream file;
 void GetData(string filename, int start, int end)
 {
 	ifstream file;
@@ -52,11 +53,13 @@ void MergeBranch(int rt)
 int nodenum = 0;
 void CreateTree(int l, int r, int rt, int x[])
 {
-	nodenum++;
+    //nodenum++;
 	if (l == r)
 	{
+        //nodenum++;
 		printf("%d tree.sum is:  %d \n", l, x[l]);
 		tree[rt].maxi = tree[rt].lmaxi = tree[rt].rmaxi = tree[rt].sum = x[l];
+        nodenum = rt > nodenum ? nodenum = rt : nodenum = nodenum;
 		return;
 	}
 	int mid = (l + r) / 2;
@@ -103,7 +106,11 @@ struct node QueryInMemory(int l, int r, int aa, int bb, int rt)
 struct node QueryInDisk(int l, int r, int aa, int bb, int rt)
 {
 	if (aa <= l && bb >= r)
-		return tree[rt];
+    {
+        file.seekg(sizeof(node)*(rt), ios::beg);
+        file.read((char*)&outtree, sizeof(node));
+        return outtree;
+    }
 	int mid = (l + r) / 2;
 	struct node ka, kb, res;
 	int flag1 = 0;
@@ -142,9 +149,10 @@ void WriteIndexFile()
 	file.open("index.dat", ios::out | ios::trunc | ios::binary);  //create index file
 	if (!file)
 		cout << "error! can't create file" << endl;
-	file.write((char*)tree, sizeof(node));                  //write data to index file
+	file.write((char*)tree, sizeof(node)*nodenum+1);                  //write data to index file
 	file.close();
 }
+
 int main()
 {
 	int left, right;
@@ -153,13 +161,16 @@ int main()
 	GetData("data2w.txt", a, b);
 	printf("total data sum is %d\n", g_data_num);
 	
-	CreateTree(a, b, 1, data);                                      //build a to b segmenttree
+	CreateTree(a, b, 1, data);//build a to b segmenttree
+    WriteIndexFile();
 	cout << "node number is " << nodenum << endl;
+    file.open("index.dat", ios::in | ios::binary);
+
 	while (1)
 	{
 		printf("Please input range: \n");
 		cin >> left >> right;
-		struct node res1 = QueryInMemory(a, b, left, right, 1);        // query aa to bb 's maxsub
+        		struct node res1 = QueryInMemory(a, b, left, right, 1);        // query aa to bb 's maxsub
 		cout << "maxsub sum is " << res1.maxi << " in memory" << endl;
 		struct node res2 = QueryInDisk(a, b, left, right, 1);        // query aa to bb 's maxsub
 		cout << "maxsub sum is " << res2.maxi << " in disk" << endl;

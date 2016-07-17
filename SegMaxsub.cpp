@@ -1,8 +1,5 @@
 // SegMaxsub.cpp : Defines the entry point for the console application.
 //
-
-#include "stdafx.h"
-
 #include <fstream>
 #include <iostream>
 #include <cstdio>
@@ -14,7 +11,7 @@ using namespace std;
 struct node
 {
 	int maxi, lmaxi, rmaxi, sum;
-}tree[50000];                 //tree's szie should be large50000009
+}tree[40000];                 //tree's szie should be large50000009
 
 int g_data_num = 0;
 const int g_data_line = 20000;

@@ -6,12 +6,14 @@
 #include <cstring>
 #include <cmath>
 #include <algorithm>
+#include <time.h>
 using namespace std;
 
+typedef __int64 mytype;
 struct node
 {
-	int maxi, lmaxi, rmaxi, sum;
-}tree[90000000], outtree;                 //tree's szie should be large50000009
+	mytype maxi, lmaxi, rmaxi, sum;
+}tree[50000000], outtree;                 //tree's szie should be large50000009
 
 int g_data_num = 0;
 const int g_data_line = 10000000;
@@ -37,7 +39,7 @@ void GetData(string filename, int start, int end)
 	file.close();
 }
 
-int max(int a, int b)
+mytype max(mytype a, mytype b)
 {
 	return a>b ? a : b;
 }
@@ -157,6 +159,7 @@ void WriteIndexFile()
 
 int main()
 {
+	clock_t start_time, end_time;
 	int left, right;
 	int a = 1;                                             
 	int b = g_data_line;
@@ -164,19 +167,23 @@ int main()
 	//printf("total data sum is %d\n", g_data_num);
 	
 	//CreateTree(a, b, 1, data);//build a to b segmenttree
-    //WriteIndexFile();
+   // WriteIndexFile();
 	//cout << "node number is " << nodenum << endl;
     file.open("index.dat", ios::in | ios::binary);
-
+	
 	while (1)
 	{
 		printf("Please input range: \n");
 		cin >> left >> right;
+		start_time = clock();
         //struct node res1 = QueryInMemory(a, b, left, right, 1);        // query aa to bb 's maxsub
 		//cout << "maxsub sum is " << res1.maxi << " in memory" << endl;
 		struct node res2 = QueryInDisk(a, b, left, right, 1);        // query aa to bb 's maxsub
 		cout << "maxsub sum is " << res2.maxi << " in disk" << endl;
 		cout << "I/O number is " << ionum << endl;
+		end_time = clock();
+		double duration_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+		cout << "duration :" << duration_time << endl;
 	}
 	return 0;
 }

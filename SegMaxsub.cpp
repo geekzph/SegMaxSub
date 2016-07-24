@@ -163,12 +163,12 @@ int main()
 	int left, right;
 	int a = 1;                                             
 	int b = g_data_line;
-	//GetData("1000w.txt", a, b);
-	//printf("total data sum is %d\n", g_data_num);
+	GetData("1000w.txt", a, b);
+	printf("total data sum is %d\n", g_data_num);
 	
-	//CreateTree(a, b, 1, data);//build a to b segmenttree
-   // WriteIndexFile();
-	//cout << "node number is " << nodenum << endl;
+	CreateTree(a, b, 1, data);//build a to b segmenttree
+    WriteIndexFile();
+	cout << "node number is " << nodenum << endl;
     file.open("index.dat", ios::in | ios::binary);
 	
 	while (1)
